@@ -105,8 +105,11 @@ module CapIt
     # 
     # @return [String]
     #
-    def capture_command        
-      cmd = "CutyCapt --url='#{@url}'"
+    def capit_command
+      Rails.env == 'production' ? '/usr/local/bin/CutyCapt' : 'CutyCapt'
+    end
+    def capture_command
+      cmd = "#{capit_command} --url='#{@url}'"
       cmd += " --out='#{@folder}/#{@filename}'"
       cmd += " --max-wait=#{@max_wait}"
       cmd += " --delay=#{@delay}" if @delay
@@ -140,7 +143,7 @@ module CapIt
     # @return
     # 
     def cutycapt_installed?
-      raise CutyCaptError, "CutyCapt must be installed and available on PATH" if `which CutyCapt`.empty?
+      raise CutyCaptError, "CutyCapt must be installed and available on PATH" if `which #{capit_command}`.empty?
     end
   end
 end
